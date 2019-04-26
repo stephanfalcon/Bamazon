@@ -43,18 +43,40 @@ function buy(){
             message:'How many would you like to buy? '
         }
     ]).then(function(res){
+        var amount2buy = res.amount
+        var itembuy = res.item 
         console.log("Does this all look right?")
         console.log(`you will purchare ${res.amount} ${items[res.item-1].product_name}`)
-        inquire.prompt([
-            {
-                name:'confirm',
-                type:'confirm',
-                message:'Confirm?'
-            }
-        ]).then(function(){
-            console.log("Thank you for your business.")
-        })
-    
+        items[res.item-1].stock_quantity -= res.amount
+        console.log(items[res.item-1])
+        if(amount2buy <= items[itembuy-1].stock_quantity){
+
+            inquire.prompt([
+                {
+                    name:'confirm',
+                    type:'confirm',
+                    message:`your total is ${parseInt(items[itembuy-1].price) * parseInt(amount2buy)}`
+                }
+            ]).then(function(res){
+                
+                if(res.confirm){
+                    console.log("thank you for your business")
+                    var update = "update "
+                    connection()
+                    buy();
+                }else{
+                    console.log("please review your order")
+                    items[itembuy-1].stock_quantity += parseInt(amount2buy)
+                    console.log(items[itembuy-1])
+                    buy();
+                    
+                }
+
+            })
+        }else{
+            console.log("That amount exceeds our current stock")
+            buy()
+        }
     })
 }
 
