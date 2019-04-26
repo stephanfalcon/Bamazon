@@ -44,30 +44,32 @@ function buy(){
         }
     ]).then(function(res){
         var amount2buy = res.amount
-        var itembuy = res.item 
+        var itembuy = res.item - 1
         console.log("Does this all look right?")
-        console.log(`you will purchare ${res.amount} ${items[res.item-1].product_name}`)
-        items[res.item-1].stock_quantity -= res.amount
-        console.log(items[res.item-1])
-        if(amount2buy <= items[itembuy-1].stock_quantity){
+        console.log(`you will purchare ${res.amount} ${items[itembuy].product_name}`)
+        items[itembuy].stock_quantity -= res.amount
+        console.log(items[itembuy].stock_quantity)
+        var newQuant = items[itembuy].stock_quantity
+        if(amount2buy <= items[itembuy].stock_quantity){
 
             inquire.prompt([
                 {
                     name:'confirm',
                     type:'confirm',
-                    message:`your total is ${parseInt(items[itembuy-1].price) * parseInt(amount2buy)}`
+                    message:`your total is ${parseInt(items[itembuy].price) * parseInt(amount2buy)}$`
                 }
             ]).then(function(res){
                 
                 if(res.confirm){
                     console.log("thank you for your business")
                     var update = "update "
-                    connection()
+                    connection.query(`update products set stock_quantity = ? where item_id = ?`,[newQuant,itembuy+1], function(err,res,field){
+                    })
                     buy();
                 }else{
                     console.log("please review your order")
-                    items[itembuy-1].stock_quantity += parseInt(amount2buy)
-                    console.log(items[itembuy-1])
+                    items[itembuy].stock_quantity += parseInt(amount2buy)
+                    console.log(items[itembuy])
                     buy();
                     
                 }
