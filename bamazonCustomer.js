@@ -47,11 +47,14 @@ function buy(){
         var itembuy = res.item - 1
         console.log("Does this all look right?")
         console.log(`you will purchare ${res.amount} ${items[itembuy].product_name}`)
-        items[itembuy].stock_quantity -= res.amount
-        console.log(items[itembuy].stock_quantity)
-        var newQuant = items[itembuy].stock_quantity
+        // connection.query(`select * from products where item_id = ${itembuy+1}`,function(err,res){
+        //     console.log(res)
+        // })
+        // console.log(items[itembuy].stock_quantity)
+        
         if(amount2buy <= items[itembuy].stock_quantity){
-
+            items[itembuy].stock_quantity -= res.amount
+            var newQuant = items[itembuy].stock_quantity
             inquire.prompt([
                 {
                     name:'confirm',
@@ -61,10 +64,12 @@ function buy(){
             ]).then(function(res){
                 
                 if(res.confirm){
+                    console.log(newQuant+" remaining")
                     console.log("thank you for your business")
                     var update = "update"
                     connection.query(`update products set stock_quantity = ? where item_id = ?`,[newQuant,itembuy+1], function(err,res,field){
                     })
+                    
                     buy();
                 }else{
                     console.log("please review your order")

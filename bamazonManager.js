@@ -143,7 +143,7 @@ function newPro(){
         connection.query(`insert into products (item_id,product_name,departent_name,price,stock_quantity) VALUES (?, ?, ?, ?, ?)`, [res.id,res.name,res.department,res.price,res.quantity])
         connection.query(`select * from products`,function(err,res){
             console.log(res)
+            start()
         })
-        start()
     })
 }
