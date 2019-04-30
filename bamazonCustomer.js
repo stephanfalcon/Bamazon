@@ -62,7 +62,7 @@ function buy(){
                 
                 if(res.confirm){
                     console.log("thank you for your business")
-                    var update = "update "
+                    var update = "update"
                     connection.query(`update products set stock_quantity = ? where item_id = ?`,[newQuant,itembuy+1], function(err,res,field){
                     })
                     buy();
